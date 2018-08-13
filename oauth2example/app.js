@@ -30,8 +30,8 @@ app.listen(app.get('port'), function () {
 
 // INSERT YOUR CONSUMER_KEY AND CONSUMER_SECRET HERE
 
-var consumerKey = '';
-var consumerSecret = '';
+var consumerKey = 'Q0hWFVoQP0AlilQGDbZDlqj9lZKqbf7R7S8IS8LTfOKrZTLTzb';
+var consumerSecret = 'LG8hWygP46wQKlAccWKDRjPohdif2TOTMBEXQZGh';
 
 app.get('/', function (req, res) {
   res.redirect('/start');
@@ -77,26 +77,24 @@ app.get('/callback', function (req, res) {
 
   request.post(postBody, function (e, r, data) {
     var accessToken = JSON.parse(r.body);
-
     // save the access token somewhere on behalf of the logged in user
-    var qbo = new QuickBooks(consumerKey,
-                             consumerSecret,
-                             accessToken.access_token, /* oAuth access token */
-                             false, /* no token secret for oAuth 2.0 */
-                             req.query.realmId,
-                             true, /* use a sandbox account */
-                             true, /* turn debugging on */
-                             4, /* minor version */
-                             '2.0', /* oauth version */
-                            accessToken.refresh_token /* refresh token */);
 
-    qbo.findAccounts(function (_, accounts) {
-      accounts.QueryResponse.Account.forEach(function (account) {
-        console.log(account.Name);
+    var qbo = new QuickBooks(consumerKey,
+      consumerSecret,
+      accessToken.access_token, /* oAuth access token */
+      false, /* no token secret for oAuth 2.0 */
+      req.query.realmId,
+      true, /* use a sandbox account */
+      true, /* turn debugging on */
+      4, /* minor version */
+      '2.0', /* oauth version */
+     accessToken.refresh_token /* refresh token */);
+
+      qbo.findAccounts(function (_, accounts) {
+      accounts.QueryResponse.Account.forEach(function (account) {console.log(account.Name);
       });
     });
-
-  });
+});
 
   res.send('<!DOCTYPE html><html lang="en"><head></head><body><script>window.opener.location.reload(); window.close();</script></body></html>');
 });
